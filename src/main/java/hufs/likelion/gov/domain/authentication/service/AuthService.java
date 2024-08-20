@@ -1,4 +1,4 @@
-package hufs.likelion.gov.service;
+package hufs.likelion.gov.domain.authentication.service;
 
 import java.util.Optional;
 
@@ -11,15 +11,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
 
-import hufs.likelion.gov.entity.Member;
-import hufs.likelion.gov.entity.RefreshToken;
-import hufs.likelion.gov.entity.Role;
-import hufs.likelion.gov.entity.request.LoginRequest;
-import hufs.likelion.gov.entity.request.SignUpRequest;
-import hufs.likelion.gov.jwt.JwtAuthenticationResponse;
-import hufs.likelion.gov.jwt.JwtTokenProvider;
-import hufs.likelion.gov.repository.MemberRepository;
-import hufs.likelion.gov.repository.RefreshTokenRepository;
+import hufs.likelion.gov.domain.authentication.entity.RefreshToken;
+import hufs.likelion.gov.domain.authentication.exception.MemberException;
+import hufs.likelion.gov.domain.authentication.jwt.JwtAuthenticationResponse;
+import hufs.likelion.gov.domain.authentication.jwt.JwtTokenProvider;
+import hufs.likelion.gov.domain.authentication.repository.MemberRepository;
+import hufs.likelion.gov.domain.authentication.entity.Member;
+import hufs.likelion.gov.domain.authentication.entity.Role;
+import hufs.likelion.gov.domain.authentication.entity.request.LoginRequest;
+import hufs.likelion.gov.domain.authentication.entity.request.SignUpRequest;
+import hufs.likelion.gov.domain.authentication.repository.RefreshTokenRepository;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -59,20 +60,20 @@ public class AuthService {
 
 			return new JwtAuthenticationResponse(accessToken, refreshTokenStr);
 		} else {
-			throw new NotFoundException("Member Not Found");
+			throw new MemberException("Member Not Found");
 		}
 	}
 
 	@Transactional
 	public String register(SignUpRequest signUpRequest) {
 		if (memberRepository.existsByMemberId(signUpRequest.getUserId())) {
-			throw new RuntimeException("MemberId is already taken!");
+			throw new MemberException("MemberId is already taken!");
 		}
 
 		try {
 			Role.fromString(signUpRequest.getRole().toString());
 		} catch (IllegalArgumentException e) {
-			throw new RuntimeException("Invalid role provided: " + signUpRequest.getRole());
+			throw new MemberException("Invalid role provided: " + signUpRequest.getRole());
 		}
 
 		Member member = new Member(
@@ -89,7 +90,7 @@ public class AuthService {
 		if (byUserId.isPresent()) {
 			return "User registered successfully";
 		} else {
-			throw new RuntimeException("User registration Failed");
+			throw new MemberException("User registration Failed");
 		}
 	}
 
@@ -100,7 +101,7 @@ public class AuthService {
 			String userId = tokenProvider.getUserIdFromJWT(refreshTokenRequest);
 			return tokenProvider.generateAccessToken(userId);
 		} else {
-			throw new RuntimeException("Invalid refresh token");
+			throw new MemberException("Invalid refresh token");
 		}
 	}
 }

@@ -1,22 +1,20 @@
-package hufs.likelion.gov.entity;
+package hufs.likelion.gov.domain.authentication.entity;
 
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
 
-import hufs.likelion.gov.Listener.MemberListener;
+import hufs.likelion.gov.domain.authentication.Listener.MemberListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 @Entity
-@Getter
-@Setter
+@Data
 @EntityListeners(MemberListener.class)
 public class Member {
 

@@ -1,4 +1,4 @@
-package hufs.likelion.gov.jwt;
+package hufs.likelion.gov.domain.authentication.jwt;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import hufs.likelion.gov.entity.Member;
+import hufs.likelion.gov.domain.authentication.entity.Member;
 
 public class CustomUserDetails implements UserDetails {
 

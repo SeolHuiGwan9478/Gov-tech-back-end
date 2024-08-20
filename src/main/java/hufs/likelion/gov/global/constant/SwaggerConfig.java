@@ -1,4 +1,4 @@
-package hufs.likelion.gov.config;
+package hufs.likelion.gov.global.constant;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

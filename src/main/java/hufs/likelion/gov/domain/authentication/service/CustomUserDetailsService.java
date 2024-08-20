@@ -1,13 +1,14 @@
-package hufs.likelion.gov.service;
+package hufs.likelion.gov.domain.authentication.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import hufs.likelion.gov.entity.Member;
-import hufs.likelion.gov.jwt.CustomUserDetails;
-import hufs.likelion.gov.repository.MemberRepository;
+import hufs.likelion.gov.domain.authentication.exception.MemberException;
+import hufs.likelion.gov.domain.authentication.jwt.CustomUserDetails;
+import hufs.likelion.gov.domain.authentication.repository.MemberRepository;
+import hufs.likelion.gov.domain.authentication.entity.Member;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -22,6 +23,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 		if (member != null) {
 			return new CustomUserDetails(member);
 		}
-		throw new UsernameNotFoundException("User not found with username: " + username);
+		throw new MemberException("User not found with username: " + username);
 	}
 }

@@ -1,4 +1,4 @@
-package hufs.likelion.gov.jwt;
+package hufs.likelion.gov.domain.authentication.jwt;
 
 import java.io.IOException;
 
@@ -9,7 +9,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import hufs.likelion.gov.service.CustomUserDetailsService;
+import hufs.likelion.gov.domain.authentication.service.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

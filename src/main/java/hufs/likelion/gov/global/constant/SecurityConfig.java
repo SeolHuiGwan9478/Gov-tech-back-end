@@ -1,4 +1,4 @@
-package hufs.likelion.gov.config;
+package hufs.likelion.gov.global.constant;
 
 import java.util.List;
 
@@ -17,8 +17,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import hufs.likelion.gov.jwt.JwtAuthenticationEntryPoint;
-import hufs.likelion.gov.jwt.JwtAuthenticationFilter;
+import hufs.likelion.gov.domain.authentication.jwt.JwtAuthenticationEntryPoint;
+import hufs.likelion.gov.domain.authentication.jwt.JwtAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {

@@ -1,6 +1,6 @@
-package hufs.likelion.gov.entity.request;
+package hufs.likelion.gov.domain.authentication.entity.request;
 
-import hufs.likelion.gov.entity.Role;
+import hufs.likelion.gov.domain.authentication.entity.Role;
 import lombok.Getter;
 import lombok.Setter;
 

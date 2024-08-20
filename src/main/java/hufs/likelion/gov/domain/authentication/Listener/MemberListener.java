@@ -1,8 +1,8 @@
-package hufs.likelion.gov.Listener;
+package hufs.likelion.gov.domain.authentication.Listener;
 
 import java.time.LocalDateTime;
 
-import hufs.likelion.gov.entity.Member;
+import hufs.likelion.gov.domain.authentication.entity.Member;
 import jakarta.persistence.PrePersist;
 
 public class MemberListener {

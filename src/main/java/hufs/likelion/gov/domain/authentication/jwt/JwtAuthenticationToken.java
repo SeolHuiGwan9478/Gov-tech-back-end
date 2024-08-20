@@ -1,4 +1,4 @@
-package hufs.likelion.gov.jwt;
+package hufs.likelion.gov.domain.authentication.jwt;
 
 import java.util.Collection;
 

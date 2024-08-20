@@ -18,13 +18,14 @@ import org.webjars.NotFoundException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import hufs.likelion.gov.entity.Role;
-import hufs.likelion.gov.entity.request.LoginRequest;
-import hufs.likelion.gov.entity.request.SignUpRequest;
-import hufs.likelion.gov.jwt.JwtAuthenticationResponse;
-import hufs.likelion.gov.jwt.JwtTokenProvider;
-import hufs.likelion.gov.service.AuthService;
-import hufs.likelion.gov.service.CustomUserDetailsService;
+import hufs.likelion.gov.domain.authentication.controller.AuthController;
+import hufs.likelion.gov.domain.authentication.entity.Role;
+import hufs.likelion.gov.domain.authentication.entity.request.LoginRequest;
+import hufs.likelion.gov.domain.authentication.entity.request.SignUpRequest;
+import hufs.likelion.gov.domain.authentication.jwt.JwtAuthenticationResponse;
+import hufs.likelion.gov.domain.authentication.jwt.JwtTokenProvider;
+import hufs.likelion.gov.domain.authentication.service.AuthService;
+import hufs.likelion.gov.domain.authentication.service.CustomUserDetailsService;
 
 @WebMvcTest(AuthController.class)
 public class AuthControllerTest {

@@ -1,4 +1,6 @@
-package hufs.likelion.gov.entity;
+package hufs.likelion.gov.domain.authentication.entity;
+
+import hufs.likelion.gov.domain.authentication.exception.MemberException;
 
 public enum Role {
 	NationalQualification, PartTime, Manager, Protector;
@@ -7,7 +9,7 @@ public enum Role {
 		try {
 			return Role.valueOf(roleStr.toUpperCase());
 		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException("Invalid role: " + roleStr);
+			throw new MemberException("Invalid role: " + roleStr);
 		}
 	}
 }
