@@ -12,5 +12,5 @@ public class PostCarePostRequest {
     private int price;
     private String content;
     private CarePostType type;
-    private List<PostCareBabyRequest> babies;
+    private List<PostCareBabyInCarePostRequest> babies;
 }
