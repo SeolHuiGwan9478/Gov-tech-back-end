@@ -1,5 +1,6 @@
 package hufs.likelion.gov.domain.matching.controller;
 
+import hufs.likelion.gov.domain.matching.dto.CarePostResponse;
 import hufs.likelion.gov.domain.matching.dto.CarePostsResponse;
 import hufs.likelion.gov.domain.matching.service.CarePostService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,8 @@ public class CarePostController {
     @GetMapping("/{postId}")
     public ResponseEntity<?> getCarePost(@PathVariable("postId") Long postId){
         log.info("Request to get care post {}", postId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        CarePostResponse response = carePostService.findCarePost(postId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{postId}")
