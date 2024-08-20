@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class CarePostResponse {
+public class GetCarePostResponse {
     private Long id;
     private String title; // 제목
     private String content; // 내용

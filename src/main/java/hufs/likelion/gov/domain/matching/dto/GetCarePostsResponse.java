@@ -7,8 +7,8 @@ import java.util.List;
 
 @Data
 @Builder
-public class CarePostsResponse {
+public class GetCarePostsResponse {
     private int totalPages;
     private int curPage;
-    private List<CarePostsData> data;
+    private List<GetCarePostsData> data;
 }
