@@ -56,6 +56,7 @@ public class CarePostService {
                 .content(request.getContent())
                 .address(request.getAddress())
                 .price(request.getPrice())
+                .type(request.getType())
                 .build();
         carePostRepository.save(carePost);
         return PostCarePostResponse.builder()

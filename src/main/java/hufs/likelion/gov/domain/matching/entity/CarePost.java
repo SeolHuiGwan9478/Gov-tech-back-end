@@ -20,6 +20,7 @@ public class CarePost {
     private String content; // 내용
     private int price; // 시급
     private String address; // 주소
+    private CarePostType type;
     // private Member member;
     @CreatedDate
     private LocalDateTime createdAt; // 생성일
