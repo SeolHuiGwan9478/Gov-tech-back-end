@@ -21,3 +21,10 @@ jwt:
   secret: 7dc99f011b193840a4366ee564a24b8b49f46182db7da914772761c547b0569dfdba1e376ab1218dca2b9c055bcc48fdbee8ce95f52a214778a26582bbd72ff4
   accessTokenExpiration: 900000
   refreshTokenExpiration: 604800000
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: OFF
+    org.hibernate.type: OFF
+    org.springframework.jdbc: OFF
