@@ -1,0 +1,74 @@
+package hufs.likelion.gov.domain.matching.service;
+
+import hufs.likelion.gov.domain.matching.dto.*;
+import hufs.likelion.gov.domain.matching.entity.CarePost;
+import hufs.likelion.gov.domain.matching.repository.CarePostRepository;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static hufs.likelion.gov.global.constant.GlobalConstant.*;
+
+@Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
+public class CarePostService {
+    private final CarePostRepository carePostRepository;
+
+    public GetCarePostsResponse findCarePosts(Pageable pageable){
+        // write authentication code
+        Page<CarePost> carePostsPage = carePostRepository.findAll(pageable);
+        List<GetCarePostsData> carePostsData = carePostsPage.getContent().stream()
+                .map(GetCarePostsData::toCarePostsData).toList();
+        return GetCarePostsResponse.builder()
+                .totalPages(carePostsPage.getTotalPages())
+                .curPage(carePostsPage.getNumber())
+                .data(carePostsData)
+                .build();
+    }
+
+    public GetCarePostResponse findCarePost(Long carePostId){
+        // write authentication
+        CarePost findCarePost = carePostRepository.findById(carePostId).orElseThrow(
+                () -> new EntityNotFoundException(NOT_FOUND_CARE_POST_ERR_MSG)
+        );
+        return GetCarePostResponse.builder()
+                .id(findCarePost.getId())
+                .title(findCarePost.getTitle())
+                .content(findCarePost.getContent())
+                .price(findCarePost.getPrice())
+                .address(findCarePost.getAddress())
+                .createdAt(findCarePost.getCreatedAt())
+                .updatedAt(findCarePost.getUpdatedAt())
+                .build();
+    }
+
+    @Transactional
+    public PostCarePostResponse createCarePost(PostCarePostRequest request){
+        // write authentication
+        CarePost carePost = CarePost.builder()
+                .title(request.getTitle())
+                .content(request.getContent())
+                .address(request.getAddress())
+                .price(request.getPrice())
+                .build();
+        carePostRepository.save(carePost);
+        return PostCarePostResponse.builder()
+                .id(carePost.getId())
+                .build();
+    }
+
+    @Transactional
+    public void deleteCarePost(Long carePostId){
+        // write authentication
+        CarePost findCarePost = carePostRepository.findById(carePostId).orElseThrow(
+                () -> new EntityNotFoundException(NOT_FOUND_CARE_POST_ERR_MSG)
+        );
+        carePostRepository.delete(findCarePost);
+    }
+}
