@@ -1,7 +1,9 @@
 package hufs.likelion.gov.domain.matching.service;
 
 import hufs.likelion.gov.domain.matching.dto.*;
+import hufs.likelion.gov.domain.matching.entity.CareBaby;
 import hufs.likelion.gov.domain.matching.entity.CarePost;
+import hufs.likelion.gov.domain.matching.repository.CareBabyRepository;
 import hufs.likelion.gov.domain.matching.repository.CarePostRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import static hufs.likelion.gov.global.constant.GlobalConstant.*;
 @RequiredArgsConstructor
 public class CarePostService {
     private final CarePostRepository carePostRepository;
+    private final CareBabyRepository careBabyRepository;
 
     public GetCarePostsResponse findCarePosts(Pageable pageable){
         // write authentication code
@@ -58,7 +61,16 @@ public class CarePostService {
                 .price(request.getPrice())
                 .type(request.getType())
                 .build();
+        List<PostCareBabyRequest> careBabyRequests = request.getBabies();
+        List<CareBaby> careBabies = careBabyRequests.stream().map((careBabyRequest) -> CareBaby.builder()
+                .age(careBabyRequest.getAge())
+                .feature(careBabyRequest.getFeature())
+                .history(careBabyRequest.getHistory())
+                .etc(careBabyRequest.getEtc())
+                .carePost(carePost)
+                .build()).toList();
         carePostRepository.save(carePost);
+        careBabyRepository.saveAll(careBabies);
         return PostCarePostResponse.builder()
                 .id(carePost.getId())
                 .build();
