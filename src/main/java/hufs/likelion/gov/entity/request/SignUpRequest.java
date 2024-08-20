@@ -19,4 +19,12 @@ public class SignUpRequest {
 	private String email;
 	private String profilePhoto;
 	private Role role;
+
+	public SignUpRequest(String userId, String password, String email, String profilePhoto, Role role) {
+		this.userId = userId;
+		this.password = password;
+		this.email = email;
+		this.profilePhoto = profilePhoto;
+		this.role = role;
+	}
 }
