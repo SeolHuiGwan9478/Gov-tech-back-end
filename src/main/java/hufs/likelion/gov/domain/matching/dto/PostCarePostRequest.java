@@ -4,7 +4,6 @@ import hufs.likelion.gov.domain.matching.entity.CarePostType;
 import lombok.Data;
 
 import java.util.List;
-
 @Data
 public class PostCarePostRequest {
     private String title;
