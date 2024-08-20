@@ -11,9 +11,9 @@ import hufs.likelion.gov.entity.Member;
 
 public class CustomUserDetails implements UserDetails {
 
-	private String username;
-	private String password;
-	private Collection<? extends GrantedAuthority> authorities;
+	private final String username;
+	private final String password;
+	private final Collection<? extends GrantedAuthority> authorities;
 
 	public CustomUserDetails(Member member) {
 		this.username = member.getMemberId();

@@ -12,7 +12,6 @@ import org.webjars.NotFoundException;
 
 import hufs.likelion.gov.entity.request.LoginRequest;
 import hufs.likelion.gov.entity.request.SignUpRequest;
-import hufs.likelion.gov.jwt.JwtTokenProvider;
 import hufs.likelion.gov.service.AuthService;
 import jakarta.validation.Valid;
 

@@ -9,6 +9,8 @@ import hufs.likelion.gov.entity.RefreshToken;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
 	Optional<RefreshToken> findByToken(String token);
+
 	void deleteByMember(Member member);
+
 	void deleteByToken(String token);
 }

@@ -11,7 +11,8 @@ public class JwtAuthenticationToken extends UsernamePasswordAuthenticationToken 
 		super(principal, credentials);
 	}
 
-	public JwtAuthenticationToken(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
+	public JwtAuthenticationToken(Object principal, Object credentials,
+		Collection<? extends GrantedAuthority> authorities) {
 		super(principal, credentials, authorities);
 	}
 }

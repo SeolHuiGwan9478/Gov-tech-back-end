@@ -1,4 +1,5 @@
 package hufs.likelion.gov.jwt;
+
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
