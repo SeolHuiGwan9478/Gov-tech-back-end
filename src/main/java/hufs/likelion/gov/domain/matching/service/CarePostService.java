@@ -40,6 +40,10 @@ public class CarePostService {
         CarePost findCarePost = carePostRepository.findById(carePostId).orElseThrow(
                 () -> new EntityNotFoundException(NOT_FOUND_CARE_POST_ERR_MSG)
         );
+        List<CareBaby> findCareBabies = careBabyRepository.findByCarePost(findCarePost);
+        List<GetCareBabyInCarePostResponse> babies = findCareBabies.stream()
+                .map(GetCareBabyInCarePostResponse::toGetCareBabyInCarePostResponse)
+                .toList();
         return GetCarePostResponse.builder()
                 .id(findCarePost.getId())
                 .title(findCarePost.getTitle())
@@ -48,6 +52,7 @@ public class CarePostService {
                 .address(findCarePost.getAddress())
                 .createdAt(findCarePost.getCreatedAt())
                 .updatedAt(findCarePost.getUpdatedAt())
+                .babies(babies)
                 .build();
     }
 
@@ -61,7 +66,7 @@ public class CarePostService {
                 .price(request.getPrice())
                 .type(request.getType())
                 .build();
-        List<PostCareBabyRequest> careBabyRequests = request.getBabies();
+        List<PostCareBabyInCarePostRequest> careBabyRequests = request.getBabies();
         List<CareBaby> careBabies = careBabyRequests.stream().map((careBabyRequest) -> CareBaby.builder()
                 .age(careBabyRequest.getAge())
                 .feature(careBabyRequest.getFeature())
