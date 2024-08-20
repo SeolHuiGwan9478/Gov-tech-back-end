@@ -6,15 +6,15 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CarePostsData {
+public class GetCarePostsData {
     private Long id;
     private String title;
     private String address;
     // baby features
     private int price;
 
-    public static CarePostsData toCarePostsData(CarePost carePost){
-        return CarePostsData.builder()
+    public static GetCarePostsData toCarePostsData(CarePost carePost){
+        return GetCarePostsData.builder()
                 .id(carePost.getId())
                 .title(carePost.getTitle())
                 .address(carePost.getAddress())
