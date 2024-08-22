@@ -29,7 +29,7 @@ public class CarePostController {
     }
 
     @PostMapping
-    public ResponseEntity<?> postCarePost(Authentication authentication, @RequestBody PostCarePostRequest request){
+    public ResponseEntity<?> postCarePost(Authentication authentication, @RequestBody PostCarePostRequest request) {
         log.info("Request to post care post");
         PostCarePostResponse response = carePostService.createCarePost(authentication, request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -46,6 +46,6 @@ public class CarePostController {
     public ResponseEntity<?> deleteCarePost(Authentication authentication, @PathVariable("postId") Long postId){
         log.info("Request to delete care post {}", postId);
         carePostService.deleteCarePost(postId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
