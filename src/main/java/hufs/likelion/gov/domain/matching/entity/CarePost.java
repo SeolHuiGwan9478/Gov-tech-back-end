@@ -1,5 +1,4 @@
 package hufs.likelion.gov.domain.matching.entity;
-
 import hufs.likelion.gov.domain.authentication.entity.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
