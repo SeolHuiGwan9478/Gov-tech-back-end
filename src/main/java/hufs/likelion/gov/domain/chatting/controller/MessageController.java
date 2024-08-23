@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MessageController {
     private final SimpMessageSendingOperations simpMessageSendingOperations;
     private final MessageService messageService;
-    private final String CHAT_SUB_PATH = "/sub/chatroom";
+    private final String CHAT_SUB_PATH = "/sub/chatroom/";
 
     @MessageMapping("/message")
     private void sendMessage(@Payload MessageRequest message){

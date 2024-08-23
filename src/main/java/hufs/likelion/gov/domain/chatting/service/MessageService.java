@@ -15,6 +15,7 @@ public class MessageService {
         Message message = Message.builder()
                 .message(dto.getMessage())
                 .status(dto.getStatus())
+                .roomId(dto.getRoomId())
                 .build();
         messageRepository.save(message);
         return new MessageResponse(message);
