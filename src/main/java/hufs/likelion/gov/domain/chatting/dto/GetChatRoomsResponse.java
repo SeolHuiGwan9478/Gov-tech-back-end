@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class FindChatRoomsResponse {
+public class GetChatRoomsResponse {
     private int totalCounts;
-    private List<FindChatRoomsData> data;
+    private List<GetChatRoomsData> data;
 }
