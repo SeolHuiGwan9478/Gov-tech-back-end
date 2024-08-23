@@ -6,6 +6,13 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       max-lifetime: 1770000
+  data:
+    mongodb:
+      uri: mongodb+srv://govtechadmin:NWlr8cau9QxDtkdA@govtechcluster.ixkei.mongodb.net/?retryWrites=true&w=majority&appName=GovTechCluster
+      port: 27017
+      username: govtechadmin
+      password: NWlr8cau9QxDtkdA
+      database: chat
 server:
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect

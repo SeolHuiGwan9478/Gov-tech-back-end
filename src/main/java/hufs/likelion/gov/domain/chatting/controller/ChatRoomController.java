@@ -1,7 +1,9 @@
 package hufs.likelion.gov.domain.chatting.controller;
 
 import hufs.likelion.gov.domain.chatting.dto.DeleteChatRoomResponse;
-import hufs.likelion.gov.domain.chatting.dto.FindChatRoomsResponse;
+import hufs.likelion.gov.domain.chatting.dto.GetChatRoomsResponse;
+import hufs.likelion.gov.domain.chatting.dto.PostChatRoomRequest;
+import hufs.likelion.gov.domain.chatting.dto.PostChatRoomResponse;
 import hufs.likelion.gov.domain.chatting.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +22,15 @@ public class ChatRoomController {
     @GetMapping
     public ResponseEntity<?> getChatRooms(Authentication authentication){
         log.info("Request to get chatRooms");
-        FindChatRoomsResponse response = chatRoomService.findChatRooms(authentication);
+        GetChatRoomsResponse response = chatRoomService.findChatRooms(authentication);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> postChatRoom(Authentication authentication, PostChatRoomRequest request){
+        log.info("Request to post chatRoom");
+        PostChatRoomResponse response = chatRoomService.createChatRoom(authentication, request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{roomId}")
