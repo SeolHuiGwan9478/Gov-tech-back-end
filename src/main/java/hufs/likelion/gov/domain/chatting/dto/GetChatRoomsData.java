@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class FindChatRoomsData {
+public class GetChatRoomsData {
     private Long id;
     private String roomId;
     private String title;
