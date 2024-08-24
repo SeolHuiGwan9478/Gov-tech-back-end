@@ -33,6 +33,7 @@ public class AuthService {
 	private MemberRepository memberRepository;
 	private RefreshTokenRepository refreshTokenRepository;
 
+	@Transactional
 	public JwtAuthenticationResponse authenticateUser(LoginRequest loginRequest) {
 		Authentication authentication = authenticationManager.authenticate(
 			new UsernamePasswordAuthenticationToken(
