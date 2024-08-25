@@ -1,12 +1,11 @@
-package hufs.likelion.gov.domain.matching.entity;
+package hufs.likelion.gov.domain.chatting.entity;
+
 import hufs.likelion.gov.domain.authentication.entity.Member;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -14,22 +13,29 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class CarePost {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // PK
-    private String title; // 제목
-    private String content; // 내용
-    private int price; // 시급
-    private String address; // 주소
-    private CarePostType type;
+public class ChatRoomMember {
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chatroom_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private ChatRoom chatRoom;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
     @CreatedDate
-    private LocalDateTime createdAt; // 생성일
-    @LastModifiedDate
-    private LocalDateTime updatedAt; // 수정일
+    private LocalDateTime createdAt;
+    private LocalDateTime disconnectedAt;
+
+    public void updateDisconnectedAt(LocalDateTime disconnectedAt){
+        this.disconnectedAt = disconnectedAt;
+    }
 }
