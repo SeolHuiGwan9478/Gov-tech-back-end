@@ -46,6 +46,6 @@ public class CarePostController {
     public ResponseEntity<?> deleteCarePost(Authentication authentication, @PathVariable("postId") Long postId){
         log.info("Request to delete care post {}", postId);
         carePostService.deleteCarePost(postId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -2,6 +2,7 @@ package hufs.likelion.gov.domain.review.controller;
 
 import hufs.likelion.gov.domain.review.dto.GetMemberReviewsResponse;
 import hufs.likelion.gov.domain.review.dto.PostMemberReviewRequest;
+import hufs.likelion.gov.domain.review.dto.PostMemberReviewResponse;
 import hufs.likelion.gov.domain.review.service.MemberReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,12 +25,13 @@ public class MemberReviewController {
     public ResponseEntity<?> getReviews(Authentication authentication){
         log.info("Request to get reviews");
         GetMemberReviewsResponse response = memberReviewService.getReviews(authentication);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<?> postReviews(Authentication authentication, PostMemberReviewRequest request){
         log.info("Request to post reviews");
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        PostMemberReviewResponse response = memberReviewService.createReview(authentication, request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }
