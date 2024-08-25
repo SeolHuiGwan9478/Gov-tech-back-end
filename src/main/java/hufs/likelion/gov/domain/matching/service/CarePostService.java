@@ -78,15 +78,34 @@ public class CarePostService {
         List<PostCareBabyInCarePostRequest> careBabyRequests = request.getBabies();
         List<CareBaby> careBabies = careBabyRequests.stream().map((careBabyRequest) -> CareBaby.builder()
                 .age(careBabyRequest.getAge())
-                .feature(careBabyRequest.getFeature())
-                .history(careBabyRequest.getHistory())
-                .etc(careBabyRequest.getEtc())
+                .keyword(careBabyRequest.getKeyword())
                 .carePost(carePost)
                 .build()).toList();
         carePostRepository.save(carePost);
         careBabyRepository.saveAll(careBabies);
         return PostCarePostResponse.builder()
                 .id(carePost.getId())
+                .build();
+    }
+
+    @Transactional
+    public PutCarePostResponse updateCarePost(Authentication authentication, Long carePostId, PutCarePostRequest request){
+        Member authMember = memberRepository.findByMemberId(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
+        CarePost findCarePost = carePostRepository.findById(carePostId).orElseThrow(
+                () -> new EntityNotFoundException(NOT_FOUND_CARE_POST_ERR_MSG));
+        findCarePost.updateCarePost(request); // post update
+        List<CareBaby> existBabies = careBabyRepository.findByCarePost(findCarePost);
+        careBabyRepository.deleteAll(existBabies);
+        List<PutCareBabyInCarePostRequest> careBabyRequests = request.getBabies();
+        List<CareBaby> careBabies = careBabyRequests.stream().map((careBabyRequest) -> CareBaby.builder()
+                .age(careBabyRequest.getAge())
+                .keyword(careBabyRequest.getKeyword())
+                .carePost(findCarePost)
+                .build()).toList();
+        careBabyRepository.saveAll(careBabies); // care babies update
+        return PutCarePostResponse.builder()
+                .id(findCarePost.getId())
                 .build();
     }
 

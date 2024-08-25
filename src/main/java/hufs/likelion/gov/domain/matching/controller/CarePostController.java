@@ -1,12 +1,10 @@
 package hufs.likelion.gov.domain.matching.controller;
 
-import hufs.likelion.gov.domain.matching.dto.PostCarePostRequest;
-import hufs.likelion.gov.domain.matching.dto.GetCarePostResponse;
-import hufs.likelion.gov.domain.matching.dto.GetCarePostsResponse;
-import hufs.likelion.gov.domain.matching.dto.PostCarePostResponse;
+import hufs.likelion.gov.domain.matching.dto.*;
 import hufs.likelion.gov.domain.matching.service.CarePostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.connector.Response;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -33,6 +31,13 @@ public class CarePostController {
         log.info("Request to post care post");
         PostCarePostResponse response = carePostService.createCarePost(authentication, request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{postId}")
+    public ResponseEntity<?> putCarePost(Authentication authentication, @PathVariable("postId") Long postId, @RequestBody PutCarePostRequest request){
+        log.info("Request to put care post");
+        PutCarePostResponse response = carePostService.updateCarePost(authentication, postId, request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{postId}")

@@ -1,5 +1,6 @@
 package hufs.likelion.gov.domain.matching.entity;
 import hufs.likelion.gov.domain.authentication.entity.Member;
+import hufs.likelion.gov.domain.matching.dto.PutCarePostRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -32,4 +33,11 @@ public class CarePost {
     private LocalDateTime createdAt; // 생성일
     @LastModifiedDate
     private LocalDateTime updatedAt; // 수정일
+
+    public void updateCarePost(PutCarePostRequest dto){
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+        this.price = dto.getPrice();
+        this.address = dto.getAddress();
+    }
 }
