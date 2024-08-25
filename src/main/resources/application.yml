@@ -13,7 +13,6 @@ spring:
       username: govtechadmin
       password: NWlr8cau9QxDtkdA
       database: chat
-server:
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:

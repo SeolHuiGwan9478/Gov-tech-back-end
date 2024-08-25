@@ -41,6 +41,9 @@ public class SecurityConfig {
 				sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(unauthorizedHandler))
 			.authorizeHttpRequests(authorizeRequests -> authorizeRequests
+					.requestMatchers(HttpMethod.GET,
+							"/api/v1/reviews"
+					).authenticated()
 					.requestMatchers(HttpMethod.POST,
 						"/api/v1/care/posts/**"
 					).authenticated()
