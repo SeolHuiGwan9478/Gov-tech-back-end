@@ -1,8 +1,7 @@
 package hufs.likelion.gov.domain.matching.entity;
 import hufs.likelion.gov.domain.authentication.entity.Member;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
@@ -14,6 +13,8 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class CarePost {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
