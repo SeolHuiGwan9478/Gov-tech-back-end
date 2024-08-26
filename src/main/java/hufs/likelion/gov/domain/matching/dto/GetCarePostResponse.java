@@ -1,5 +1,6 @@
 package hufs.likelion.gov.domain.matching.dto;
 
+import hufs.likelion.gov.domain.matching.entity.CarePostStatus;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,6 +15,7 @@ public class GetCarePostResponse {
     private String content; // 내용
     private int price; // 시급
     private String address; // 주소
+    private CarePostStatus status;
     private LocalDateTime createdAt; // 생성일
     private LocalDateTime updatedAt; // 수정일
     private List<GetCareBabyInCarePostResponse> babies;

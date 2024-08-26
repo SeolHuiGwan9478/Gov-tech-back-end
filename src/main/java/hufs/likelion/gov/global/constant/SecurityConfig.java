@@ -45,7 +45,18 @@ public class SecurityConfig {
 							"/api/v1/reviews"
 					).authenticated()
 					.requestMatchers(HttpMethod.POST,
-						"/api/v1/care/posts/**"
+						"/api/v1/care/posts",
+							"/api/v1/reviews",
+							"/api/v1/complains",
+              "/api/v1/care/requests"
+					).authenticated()
+					.requestMatchers(HttpMethod.PUT,
+							"/api/v1/care/posts/**",
+							"/api/v1/complains/**"
+					).authenticated()
+					.requestMatchers(HttpMethod.PATCH,
+							"/api/v1/care/posts/**",
+              "/api/v1/care/requests/**"
 					).authenticated()
 					.requestMatchers(HttpMethod.DELETE,
 							"/api/v1/care/posts/**"
@@ -53,7 +64,6 @@ public class SecurityConfig {
 					.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()  // Swagger URL 허용
 					.anyRequest().permitAll()
 			);
-
 		http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();

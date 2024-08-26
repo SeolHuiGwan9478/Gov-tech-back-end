@@ -6,6 +6,7 @@ import hufs.likelion.gov.domain.matching.dto.*;
 import hufs.likelion.gov.domain.matching.entity.CareBaby;
 
 import hufs.likelion.gov.domain.matching.entity.CarePost;
+import hufs.likelion.gov.domain.matching.entity.CarePostStatus;
 import hufs.likelion.gov.domain.matching.repository.CareBabyRepository;
 import hufs.likelion.gov.domain.matching.repository.CarePostRepository;
 
@@ -28,7 +29,6 @@ public class CarePostService {
     private final CarePostRepository carePostRepository;
     private final CareBabyRepository careBabyRepository;
     private final MemberRepository memberRepository;
-
 
     public GetCarePostsResponse findCarePosts(Pageable pageable){
         // write authentication code
@@ -57,6 +57,7 @@ public class CarePostService {
                 .content(findCarePost.getContent())
                 .price(findCarePost.getPrice())
                 .address(findCarePost.getAddress())
+                .status(findCarePost.getStatus())
                 .createdAt(findCarePost.getCreatedAt())
                 .updatedAt(findCarePost.getUpdatedAt())
                 .babies(babies)
@@ -72,15 +73,14 @@ public class CarePostService {
                 .content(request.getContent())
                 .address(request.getAddress())
                 .price(request.getPrice())
+                .status(CarePostStatus.WAITING)
                 .type(request.getType())
                 .member(authMember)
                 .build();
         List<PostCareBabyInCarePostRequest> careBabyRequests = request.getBabies();
         List<CareBaby> careBabies = careBabyRequests.stream().map((careBabyRequest) -> CareBaby.builder()
                 .age(careBabyRequest.getAge())
-                .feature(careBabyRequest.getFeature())
-                .history(careBabyRequest.getHistory())
-                .etc(careBabyRequest.getEtc())
+                .keyword(careBabyRequest.getKeyword())
                 .carePost(carePost)
                 .build()).toList();
         carePostRepository.save(carePost);
@@ -91,11 +91,46 @@ public class CarePostService {
     }
 
     @Transactional
-    public void deleteCarePost(Long carePostId){
-        // write authentication
+    public PutCarePostResponse updateCarePost(Authentication authentication, Long carePostId, PutCarePostRequest request){
+        Member authMember = memberRepository.findByMemberId(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
+        CarePost findCarePost = carePostRepository.findById(carePostId).orElseThrow(
+                () -> new EntityNotFoundException(NOT_FOUND_CARE_POST_ERR_MSG));
+        findCarePost.updateCarePost(request); // post update
+        List<CareBaby> existBabies = careBabyRepository.findByCarePost(findCarePost);
+        careBabyRepository.deleteAll(existBabies);
+        List<PutCareBabyInCarePostRequest> careBabyRequests = request.getBabies();
+        List<CareBaby> careBabies = careBabyRequests.stream().map((careBabyRequest) -> CareBaby.builder()
+                .age(careBabyRequest.getAge())
+                .keyword(careBabyRequest.getKeyword())
+                .carePost(findCarePost)
+                .build()).toList();
+        careBabyRepository.saveAll(careBabies); // care babies update
+        return PutCarePostResponse.builder()
+                .id(findCarePost.getId())
+                .build();
+    }
+
+    @Transactional
+    public void deleteCarePost(Authentication authentication, Long carePostId){
+        Member authMember = memberRepository.findByMemberId(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
         CarePost findCarePost = carePostRepository.findById(carePostId).orElseThrow(
                 () -> new EntityNotFoundException(NOT_FOUND_CARE_POST_ERR_MSG)
         );
         carePostRepository.delete(findCarePost);
+    }
+
+    @Transactional
+    public PatchCarePostResponse finishCarePost(Authentication authentication, Long carePostId){
+        Member authMember = memberRepository.findByMemberId(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
+        CarePost findCarePost = carePostRepository.findById(carePostId).orElseThrow(
+                () -> new EntityNotFoundException(NOT_FOUND_CARE_POST_ERR_MSG)
+        );
+        findCarePost.finishCarePost();
+        return PatchCarePostResponse.builder()
+                .id(findCarePost.getId())
+                .build();
     }
 }
