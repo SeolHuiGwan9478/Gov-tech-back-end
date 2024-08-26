@@ -32,6 +32,7 @@ public class CarePost {
     @JoinColumn(name = "member_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
+
     @CreatedDate
     private LocalDateTime createdAt; // 생성일
     @LastModifiedDate
