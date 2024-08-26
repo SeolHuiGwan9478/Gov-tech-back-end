@@ -1,8 +1,6 @@
 package hufs.likelion.gov.domain.complain.controller;
 
-import hufs.likelion.gov.domain.complain.dto.GetComplainsResponse;
-import hufs.likelion.gov.domain.complain.dto.PostComplainRequest;
-import hufs.likelion.gov.domain.complain.dto.PostComplainResponse;
+import hufs.likelion.gov.domain.complain.dto.*;
 import hufs.likelion.gov.domain.complain.service.ComplainService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,9 +33,17 @@ public class ComplainController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @PutMapping("/{complainId}")
+    public ResponseEntity<?> updateComplain(Authentication authentication, @PathVariable("complainId") Long complainId, @RequestBody PutComplainRequest request){
+        log.info("Request to put complain {}", complainId);
+        PutComplainResponse response = complainService.updateComplain(authentication, complainId, request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping("/{complainId}")
     public ResponseEntity<?> getComplain(@PathVariable("complainId") Long complainId){
         log.info("Request to get complain {}", complainId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        GetComplainResponse response = complainService.getComplain(complainId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

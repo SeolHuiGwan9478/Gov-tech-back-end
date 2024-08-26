@@ -1,6 +1,7 @@
 package hufs.likelion.gov.domain.complain.entity;
 
 import hufs.likelion.gov.domain.authentication.entity.Member;
+import hufs.likelion.gov.domain.complain.dto.PutComplainRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -31,4 +32,10 @@ public class Complain {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    public void updateComplain(PutComplainRequest dto){
+        this.title = dto.getTitle();
+        this.type = dto.getType();
+        this.content = dto.getContent();
+    }
 }

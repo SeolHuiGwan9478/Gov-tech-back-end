@@ -1,11 +1,9 @@
 package hufs.likelion.gov.domain.complain.service;
 
+import hufs.likelion.gov.domain.authentication.dto.GetMemberData;
 import hufs.likelion.gov.domain.authentication.entity.Member;
 import hufs.likelion.gov.domain.authentication.repository.MemberRepository;
-import hufs.likelion.gov.domain.complain.dto.GetComplainsData;
-import hufs.likelion.gov.domain.complain.dto.GetComplainsResponse;
-import hufs.likelion.gov.domain.complain.dto.PostComplainRequest;
-import hufs.likelion.gov.domain.complain.dto.PostComplainResponse;
+import hufs.likelion.gov.domain.complain.dto.*;
 import hufs.likelion.gov.domain.complain.entity.Complain;
 import hufs.likelion.gov.domain.complain.entity.ComplainStatus;
 import hufs.likelion.gov.domain.complain.repository.ComplainRepository;
@@ -19,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static hufs.likelion.gov.global.constant.GlobalConstant.NOT_FOUND_COMPLAIN_ERR_MSG;
 import static hufs.likelion.gov.global.constant.GlobalConstant.NOT_FOUND_MEMBER_ERR_MSG;
 
 @Service
@@ -52,6 +51,34 @@ public class ComplainService {
         complainRepository.save(newComplain);
         return PostComplainResponse.builder()
                 .id(newComplain.getId())
+                .build();
+    }
+
+    public GetComplainResponse getComplain(Long complainId){
+        Complain findComplain = complainRepository.findById(complainId)
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_COMPLAIN_ERR_MSG));
+        Member member = findComplain.getMember();
+        return GetComplainResponse.builder()
+                .id(findComplain.getId())
+                .title(findComplain.getTitle())
+                .content(findComplain.getContent())
+                .type(findComplain.getType())
+                .status(findComplain.getStatus())
+                .member(GetMemberData.toGetMemberData(member))
+                .createdAt(findComplain.getCreatedAt())
+                .updatedAt(findComplain.getUpdatedAt())
+                .build();
+    }
+
+    @Transactional
+    public PutComplainResponse updateComplain(Authentication authentication, Long complainId, PutComplainRequest dto) {
+        Member authMember = memberRepository.findByMemberId(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
+        Complain findComplain = complainRepository.findById(complainId)
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_COMPLAIN_ERR_MSG));
+        findComplain.updateComplain(dto);
+        return PutComplainResponse.builder()
+                .id(findComplain.getId())
                 .build();
     }
 }
