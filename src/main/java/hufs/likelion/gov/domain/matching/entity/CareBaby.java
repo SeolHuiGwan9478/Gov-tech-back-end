@@ -14,9 +14,7 @@ public class CareBaby {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int age;
-    private String feature;
-    private String history;
-    private String etc;
+    private String keyword;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "care_post_id")
     @OnDelete(action = OnDeleteAction.CASCADE)

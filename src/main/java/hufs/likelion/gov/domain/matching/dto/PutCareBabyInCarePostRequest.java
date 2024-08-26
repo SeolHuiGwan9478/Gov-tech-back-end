@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class PostCareBabyInCarePostRequest {
+public class PutCareBabyInCarePostRequest {
     private int age;
     private String keyword;
 }
