@@ -6,8 +6,8 @@ import lombok.Getter;
 
 @Getter
 public enum CarePostStatus {
-    WAITING("WAITING"),
-    MATCHED("MATCHED");
+    WAITING("모집중"),
+    MATCHED("모집 완료");
     private final String status;
 
     CarePostStatus(String status) {
