@@ -1,6 +1,8 @@
 package hufs.likelion.gov.domain.complain.controller;
 
 import hufs.likelion.gov.domain.complain.dto.GetComplainsResponse;
+import hufs.likelion.gov.domain.complain.dto.PostComplainRequest;
+import hufs.likelion.gov.domain.complain.dto.PostComplainResponse;
 import hufs.likelion.gov.domain.complain.service.ComplainService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,10 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -30,5 +29,15 @@ public class ComplainController {
     }
 
     @PostMapping
-    public ResponseEntity<?> postComplains(Authentication authentication)
+    public ResponseEntity<?> postComplains(Authentication authentication, @RequestBody PostComplainRequest request){
+        log.info("Request to post complain");
+        PostComplainResponse response = complainService.createComplain(authentication, request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{complainId}")
+    public ResponseEntity<?> getComplain(@PathVariable("complainId") Long complainId){
+        log.info("Request to get complain {}", complainId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
