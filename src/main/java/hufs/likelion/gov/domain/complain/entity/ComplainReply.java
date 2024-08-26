@@ -1,13 +1,15 @@
-package hufs.likelion.gov.domain.review.entity;
+package hufs.likelion.gov.domain.complain.entity;
 
 import hufs.likelion.gov.domain.authentication.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
@@ -15,19 +17,20 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class MemberReview {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ComplainReply {
+    @Id @GeneratedValue
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
-    private Member owner;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "writer_id")
-    private Member writer;
     private String content;
-    private int score;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "complain_id")
+    private Complain complain;
     @CreatedDate
     private LocalDateTime createdAt;
-    @OneToMany(mappedBy = "memberReview", orphanRemoval = true)
-    private List<MemberReviewKeyword> keywords;
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 }

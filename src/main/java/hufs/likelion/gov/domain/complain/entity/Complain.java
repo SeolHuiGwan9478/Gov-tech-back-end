@@ -1,6 +1,7 @@
-package hufs.likelion.gov.domain.matching.entity;
+package hufs.likelion.gov.domain.complain.entity;
+
 import hufs.likelion.gov.domain.authentication.entity.Member;
-import hufs.likelion.gov.domain.matching.dto.PutCarePostRequest;
+import hufs.likelion.gov.domain.complain.dto.PutComplainRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -17,34 +18,30 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class CarePost {
+public class Complain {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // PK
-    private String title; // 제목
-    private String content; // 내용
-    private int price; // 시급
-    private String address; // 주소
-    @Enumerated(EnumType.STRING)
-    private CarePostType type;
-    @Enumerated(EnumType.STRING)
-    private CarePostStatus status;
+    private Long id;
+    private String title;
+    private String type;
+    private String content;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
+    @Enumerated(EnumType.STRING)
+    private ComplainStatus status;
     @CreatedDate
-    private LocalDateTime createdAt; // 생성일
+    private LocalDateTime createdAt;
     @LastModifiedDate
-    private LocalDateTime updatedAt; // 수정일
+    private LocalDateTime updatedAt;
 
-    public void updateCarePost(PutCarePostRequest dto){
+    public void updateComplain(PutComplainRequest dto){
         this.title = dto.getTitle();
+        this.type = dto.getType();
         this.content = dto.getContent();
-        this.price = dto.getPrice();
-        this.address = dto.getAddress();
     }
 
-    public void finishCarePost(){
-        this.status = CarePostStatus.MATCHED;
+    public void updateStatus(){
+        this.status = ComplainStatus.DONE;
     }
 }

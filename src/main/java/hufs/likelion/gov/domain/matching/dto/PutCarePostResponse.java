@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 @Builder
-public class PostCareBabyInCarePostRequest {
-    private int age;
-    private String keyword;
+public class PutCarePostResponse {
+    private Long id;
 }
