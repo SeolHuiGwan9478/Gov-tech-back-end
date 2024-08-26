@@ -7,18 +7,28 @@ import lombok.Getter;
 @Getter
 @Builder
 public class GetCarePostsData {
-    private Long id;
-    private String title;
-    private String address;
-    // baby features
-    private int price;
+	private Long id;
+	private String title;
+	private String address;
+	// baby features
+	private int price;
 
-    public static GetCarePostsData toCarePostsData(CarePost carePost){
-        return GetCarePostsData.builder()
-                .id(carePost.getId())
-                .title(carePost.getTitle())
-                .address(carePost.getAddress())
-                .price(carePost.getPrice())
-                .build();
-    }
+	public static GetCarePostsData toCarePostsData(CarePost carePost) {
+		return GetCarePostsData.builder()
+			.id(carePost.getId())
+			.title(carePost.getTitle())
+			.address(carePost.getAddress())
+			.price(carePost.getPrice())
+			.build();
+	}
+
+	@Override
+	public String toString() {
+		return "{" +
+			"id=" + id +
+			", title='" + title + '\'' +
+			", address='" + address + '\'' +
+			", price=" + price +
+			'}';
+	}
 }
