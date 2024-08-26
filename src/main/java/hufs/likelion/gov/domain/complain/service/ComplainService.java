@@ -5,7 +5,9 @@ import hufs.likelion.gov.domain.authentication.entity.Member;
 import hufs.likelion.gov.domain.authentication.repository.MemberRepository;
 import hufs.likelion.gov.domain.complain.dto.*;
 import hufs.likelion.gov.domain.complain.entity.Complain;
+import hufs.likelion.gov.domain.complain.entity.ComplainReply;
 import hufs.likelion.gov.domain.complain.entity.ComplainStatus;
+import hufs.likelion.gov.domain.complain.repository.ComplainReplyRepository;
 import hufs.likelion.gov.domain.complain.repository.ComplainRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ import static hufs.likelion.gov.global.constant.GlobalConstant.NOT_FOUND_MEMBER_
 @RequiredArgsConstructor
 public class ComplainService {
     private final ComplainRepository complainRepository;
+    private final ComplainReplyRepository complainReplyRepository;
     private final MemberRepository memberRepository;
 
     public GetComplainsResponse findComplains(Pageable pageable){
@@ -79,6 +82,35 @@ public class ComplainService {
         findComplain.updateComplain(dto);
         return PutComplainResponse.builder()
                 .id(findComplain.getId())
+                .build();
+    }
+
+    public GetComplainRepliesResponse getComplainReplies(Long complainId){
+        Complain findComplain = complainRepository.findById(complainId)
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_COMPLAIN_ERR_MSG));
+        List<ComplainReply> findComplainReplies = complainReplyRepository.findByComplain(findComplain);
+        List<GetComplainRepliesData> repliesData = findComplainReplies.stream().map(GetComplainRepliesData::toGetComplainRepliesData).toList();
+        return GetComplainRepliesResponse.builder()
+                .totalCount(repliesData.size())
+                .data(repliesData)
+                .build();
+    }
+
+    @Transactional
+    public PostComplainReplyResponse createComplainReply(Authentication authentication, Long complainId, PostComplainReplyRequest dto) {
+        Member authMember = memberRepository.findByMemberId(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
+        Complain findComplain = complainRepository.findById(complainId)
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_COMPLAIN_ERR_MSG));
+        ComplainReply newComplainReply = ComplainReply.builder()
+                .content(dto.getContent())
+                .complain(findComplain)
+                .member(authMember)
+                .build();
+        complainReplyRepository.save(newComplainReply);
+        findComplain.updateStatus();
+        return PostComplainReplyResponse.builder()
+                .id(newComplainReply.getId())
                 .build();
     }
 }

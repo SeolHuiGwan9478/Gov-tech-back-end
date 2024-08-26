@@ -46,4 +46,18 @@ public class ComplainController {
         GetComplainResponse response = complainService.getComplain(complainId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping("/{complainId}/replies")
+    public ResponseEntity<?> getComplainReplies(@PathVariable("complainId") Long complainId){
+        log.info("Request to get complain replies {}", complainId);
+        GetComplainRepliesResponse response = complainService.getComplainReplies(complainId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/{complainId}/replies")
+    public ResponseEntity<?> postComplainReplies(Authentication authentication, @PathVariable("complainId") Long complainId, @RequestBody PostComplainReplyRequest request) {
+        log.info("Request to post complain reply {}", complainId);
+        PostComplainReplyResponse response = complainService.createComplainReply(authentication, complainId, request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
 }
