@@ -24,7 +24,10 @@ public class CarePost {
     private String content; // 내용
     private int price; // 시급
     private String address; // 주소
+    @Enumerated(EnumType.STRING)
     private CarePostType type;
+    @Enumerated(EnumType.STRING)
+    private CarePostStatus status;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -39,5 +42,9 @@ public class CarePost {
         this.content = dto.getContent();
         this.price = dto.getPrice();
         this.address = dto.getAddress();
+    }
+
+    public void finishCarePost(){
+        this.status = CarePostStatus.MATCHED;
     }
 }

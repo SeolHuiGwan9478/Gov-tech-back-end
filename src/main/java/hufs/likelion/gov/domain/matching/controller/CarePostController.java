@@ -50,7 +50,14 @@ public class CarePostController {
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> deleteCarePost(Authentication authentication, @PathVariable("postId") Long postId){
         log.info("Request to delete care post {}", postId);
-        carePostService.deleteCarePost(postId);
+        carePostService.deleteCarePost(authentication, postId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping("/{postId}/finish")
+    public ResponseEntity<?> finishCarePost(Authentication authentication, @PathVariable("postId") Long postId){
+        log.info("Request to finish care post {}", postId);
+        PatchCarePostResponse response = carePostService.finishCarePost(authentication, postId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

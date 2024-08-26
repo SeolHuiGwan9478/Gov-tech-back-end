@@ -6,6 +6,7 @@ import hufs.likelion.gov.domain.matching.dto.*;
 import hufs.likelion.gov.domain.matching.entity.CareBaby;
 
 import hufs.likelion.gov.domain.matching.entity.CarePost;
+import hufs.likelion.gov.domain.matching.entity.CarePostStatus;
 import hufs.likelion.gov.domain.matching.repository.CareBabyRepository;
 import hufs.likelion.gov.domain.matching.repository.CarePostRepository;
 
@@ -57,6 +58,7 @@ public class CarePostService {
                 .content(findCarePost.getContent())
                 .price(findCarePost.getPrice())
                 .address(findCarePost.getAddress())
+                .status(findCarePost.getStatus())
                 .createdAt(findCarePost.getCreatedAt())
                 .updatedAt(findCarePost.getUpdatedAt())
                 .babies(babies)
@@ -72,6 +74,7 @@ public class CarePostService {
                 .content(request.getContent())
                 .address(request.getAddress())
                 .price(request.getPrice())
+                .status(CarePostStatus.WAITING)
                 .type(request.getType())
                 .member(authMember)
                 .build();
@@ -110,11 +113,25 @@ public class CarePostService {
     }
 
     @Transactional
-    public void deleteCarePost(Long carePostId){
-        // write authentication
+    public void deleteCarePost(Authentication authentication, Long carePostId){
+        Member authMember = memberRepository.findByMemberId(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
         CarePost findCarePost = carePostRepository.findById(carePostId).orElseThrow(
                 () -> new EntityNotFoundException(NOT_FOUND_CARE_POST_ERR_MSG)
         );
         carePostRepository.delete(findCarePost);
+    }
+
+    @Transactional
+    public PatchCarePostResponse finishCarePost(Authentication authentication, Long carePostId){
+        Member authMember = memberRepository.findByMemberId(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
+        CarePost findCarePost = carePostRepository.findById(carePostId).orElseThrow(
+                () -> new EntityNotFoundException(NOT_FOUND_CARE_POST_ERR_MSG)
+        );
+        findCarePost.finishCarePost();
+        return PatchCarePostResponse.builder()
+                .id(findCarePost.getId())
+                .build();
     }
 }
