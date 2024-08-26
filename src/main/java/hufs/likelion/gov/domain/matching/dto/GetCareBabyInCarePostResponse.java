@@ -9,17 +9,13 @@ import lombok.Data;
 public class GetCareBabyInCarePostResponse {
     private Long id;
     private int age;
-    private String feature;
-    private String history;
-    private String etc;
+    private String keyword;
 
     public static GetCareBabyInCarePostResponse toGetCareBabyInCarePostResponse(CareBaby careBaby){
         return GetCareBabyInCarePostResponse.builder()
                 .id(careBaby.getId())
                 .age(careBaby.getAge())
-                .feature(careBaby.getFeature())
-                .history(careBaby.getHistory())
-                .etc(careBaby.getEtc())
+                .keyword(careBaby.getKeyword())
                 .build();
     }
 }
