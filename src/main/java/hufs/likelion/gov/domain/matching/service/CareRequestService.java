@@ -1,7 +1,10 @@
 package hufs.likelion.gov.domain.matching.service;
 
+import static hufs.likelion.gov.domain.matching.dto.CareRequestResponse.toCareRequestResponse;
+
 import hufs.likelion.gov.domain.authentication.entity.Member;
 import hufs.likelion.gov.domain.authentication.repository.MemberRepository;
+import hufs.likelion.gov.domain.matching.dto.CareRequestResponse;
 import hufs.likelion.gov.domain.matching.dto.PostCareRequestRequest;
 import hufs.likelion.gov.domain.matching.entity.CarePost;
 import hufs.likelion.gov.domain.matching.entity.CareRequest;
@@ -34,37 +37,42 @@ public class CareRequestService {
         careRequestRepository.save(careRequest);
     }
     //모든 요청 조회
-    public List<CareRequest> findAllCareRequest(Authentication authentication) {
+    public List<CareRequestResponse> findAllCareRequest(Authentication authentication) {
         Member requester = memberRepository.findByMemberId(authentication.getName()).orElseThrow();
-        return careRequestRepository.findByRequester(requester);
+        List<CareRequest> careRequests = careRequestRepository.findByRequester(requester);
+        return careRequests.stream()
+            .map(CareRequestResponse::toCareRequestResponse)
+            .toList();
     }
 
 
     //요청 수락
-    public void acceptCareRequest(Authentication authentication, PostCareRequestRequest request) {
-        Member requester = memberRepository.findByMemberId(authentication.getName()).orElseThrow();
-        CarePost carePost = carePostRepository.findById(request.getCarePostId()).orElseThrow();
-        CareRequest careRequest = careRequestRepository.findByRequesterAndCarePost(requester, carePost);
-
-        if(careRequest.getStatus() == MatchStatus.REQUESTED){
-            careRequest.setStatus(MatchStatus.ACCEPTED);
-            careRequest.setCreatedAt(LocalDateTime.now());
-        } else {
-            throw new AccessDeniedException("이미 수락된 요청입니다.");
-        }
-    }
+//    public CareRequestResponse acceptCareRequest(Authentication authentication, Long postId) {
+//        Member requester = memberRepository.findByMemberId(authentication.getName()).orElseThrow();
+//        CarePost carePost = carePostRepository.findById(postId).orElseThrow();
+//        CareRequest careRequest = careRequestRepository.findByRequesterAndCarePost(requester, carePost);
+//
+//        if(careRequest.getStatus() == MatchStatus.REQUESTED){
+//            careRequest.setStatus(MatchStatus.ACCEPTED);
+//            careRequest.setCreatedAt(LocalDateTime.now());
+//            return toCareRequestResponse(careRequest);
+//        } else {
+//            throw new AccessDeniedException("이미 수락된 요청입니다.");
+//        }
+//    }
 
     //요청 거부
-    public void rejectCareRequest(Authentication authentication, PostCareRequestRequest request) {
-        Member requester = memberRepository.findByMemberId(authentication.getName()).orElseThrow();
-        CarePost carePost = carePostRepository.findById(request.getCarePostId()).orElseThrow();
-        CareRequest careRequest = careRequestRepository.findByRequesterAndCarePost(requester, carePost);
-
-        if(careRequest.getStatus() == MatchStatus.REQUESTED){
-            careRequest.setStatus(MatchStatus.REJECTED);
-            careRequest.setCreatedAt(LocalDateTime.now());
-        } else {
-            throw new AccessDeniedException("이미 수락된 요청입니다.");
-        }
-    }
+//    public CareRequestResponse rejectCareRequest(Authentication authentication, Long postId) {
+//        Member requester = memberRepository.findByMemberId(authentication.getName()).orElseThrow();
+//        CarePost carePost = carePostRepository.findById(postId).orElseThrow();
+//        CareRequest careRequest = careRequestRepository.findByRequesterAndCarePost(requester, carePost);
+//
+//        if(careRequest.getStatus() == MatchStatus.REQUESTED){
+//            careRequest.setStatus(MatchStatus.REJECTED);
+//            careRequest.setCreatedAt(LocalDateTime.now());
+//            return toCareRequestResponse(careRequest);
+//        } else {
+//            throw new AccessDeniedException("이미 수락된 요청입니다.");
+//        }
+//    }
 }

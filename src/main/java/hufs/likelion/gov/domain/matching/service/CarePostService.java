@@ -29,7 +29,6 @@ public class CarePostService {
     private final CareBabyRepository careBabyRepository;
     private final MemberRepository memberRepository;
 
-
     public GetCarePostsResponse findCarePosts(Pageable pageable){
         // write authentication code
         Page<CarePost> carePostsPage = carePostRepository.findAll(pageable);

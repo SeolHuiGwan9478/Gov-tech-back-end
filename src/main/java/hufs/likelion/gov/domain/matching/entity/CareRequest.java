@@ -37,7 +37,7 @@ public class CareRequest {
     @JoinColumn(name = "requester_id", nullable = false)
     private Member requester;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private MatchStatus status;
 
     @CreatedDate

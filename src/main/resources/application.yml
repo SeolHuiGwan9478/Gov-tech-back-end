@@ -1,12 +1,49 @@
+#spring:
+#  datasource:
+#    url: jdbc:mysql://127.0.0.1:3308/gov?&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&rewriteBatchedStatements=true
+#    username: root
+##<<<<<<< HEAD
+#    password: dntjd326
+##=======
+##    password: tjfgmlrhks9478@
+##>>>>>>> develop
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    hikari:
+#      max-lifetime: 1770000
+#  data:
+#    mongodb:
+#      uri: mongodb+srv://govtechadmin:NWlr8cau9QxDtkdA@govtechcluster.ixkei.mongodb.net/?retryWrites=true&w=majority&appName=GovTechCluster
+#      port: 27017
+#      username: govtechadmin
+#      password: NWlr8cau9QxDtkdA
+#      database: chat
+#server:
+#  jpa:
+#    database-platform: org.hibernate.dialect.MySQL8Dialect
+#    hibernate:
+#      ddl-auto: update
+#      show_sql: true
+#      default_batch_fetch_size: 100
+#    properties:
+#      hibernate:
+#        format_sql: false
+#
+#jwt:
+#  secret: 7dc99f011b193840a4366ee564a24b8b49f46182db7da914772761c547b0569dfdba1e376ab1218dca2b9c055bcc48fdbee8ce95f52a214778a26582bbd72ff4
+#  accessTokenExpiration: 900000
+#  refreshTokenExpiration: 604800000
+#
+#logging:
+#  level:
+#    root: INFO
+#    org.hibernate.SQL: OFF
+#    org.hibernate.type: OFF
+#    org.springframework.jdbc: OFF
 spring:
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/gov?&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&rewriteBatchedStatements=true
     username: root
-#<<<<<<< HEAD
     password: dntjd326
-#=======
-#    password: tjfgmlrhks9478@
-#>>>>>>> develop
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       max-lifetime: 1770000
@@ -17,7 +54,6 @@ spring:
       username: govtechadmin
       password: NWlr8cau9QxDtkdA
       database: chat
-server:
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
