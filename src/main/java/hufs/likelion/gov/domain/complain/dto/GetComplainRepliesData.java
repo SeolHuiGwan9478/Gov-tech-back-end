@@ -5,6 +5,9 @@ import hufs.likelion.gov.domain.authentication.entity.Member;
 import hufs.likelion.gov.domain.complain.entity.ComplainReply;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -12,7 +15,8 @@ public class GetComplainRepliesData {
     private Long id;
     private GetMemberData member;
     private String content;
-    private String createdAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public static GetComplainRepliesData toGetComplainRepliesData(ComplainReply complainReply){
         Member member = complainReply.getMember();
@@ -20,7 +24,8 @@ public class GetComplainRepliesData {
                 .id(complainReply.getId())
                 .member(GetMemberData.toGetMemberData(member))
                 .content(complainReply.getContent())
-                .createdAt(complainReply.getCreatedAt().toString())
+                .createdAt(complainReply.getCreatedAt())
+                .updatedAt(complainReply.getUpdatedAt())
                 .build();
     }
 }

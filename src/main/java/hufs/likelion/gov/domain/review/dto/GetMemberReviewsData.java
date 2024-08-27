@@ -1,5 +1,6 @@
 package hufs.likelion.gov.domain.review.dto;
 
+import hufs.likelion.gov.domain.authentication.dto.GetMemberData;
 import hufs.likelion.gov.domain.authentication.entity.Member;
 import hufs.likelion.gov.domain.review.entity.MemberReview;
 import hufs.likelion.gov.domain.review.entity.MemberReviewKeyword;
@@ -15,9 +16,7 @@ public class GetMemberReviewsData {
     private int score;
     private String content;
     // writer info
-    private Long writerId;
-    private String writerMemberId;
-    private String writerEmail;
+    private GetMemberData writer;
     // keywords
     private List<String> keywords;
 
@@ -28,9 +27,7 @@ public class GetMemberReviewsData {
                 .id(review.getId())
                 .score(review.getScore())
                 .content(review.getContent())
-                .writerId(writer.getId())
-                .writerMemberId(writer.getMemberId())
-                .writerEmail(writer.getEmail())
+                .writer(GetMemberData.toGetMemberData(writer))
                 .keywords(memberReviewKeywords.stream().map(MemberReviewKeyword::getKeyword).toList())
                 .build();
     }
