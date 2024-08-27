@@ -2,6 +2,7 @@ package hufs.likelion.gov.domain.pay.controller;
 
 import hufs.likelion.gov.domain.pay.PayInfoDto;
 import hufs.likelion.gov.domain.pay.dto.PayApproveResDto;
+import hufs.likelion.gov.domain.pay.response.BaseResponse;
 import hufs.likelion.gov.domain.pay.service.KakaoPayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,8 +29,8 @@ public class KakaoPayController {
                 .body(kakaoPayService.getRedirectUrl(payInfoDto));
         }
         catch(Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-//                .body(new BaseResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new BaseResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()));
 
         }
     }
@@ -46,8 +47,8 @@ public class KakaoPayController {
                 .body(kakaoApprove);
         }
         catch(Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-//                .body(new BaseResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new BaseResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage()));
         }
     }
 

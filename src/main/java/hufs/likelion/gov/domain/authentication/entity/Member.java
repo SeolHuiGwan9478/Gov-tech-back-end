@@ -27,6 +27,7 @@ public class Member {
 	private Boolean isAuth = false;
 	private String profilePhoto;
 	private Role role;
+	private String tid;
 
 	@CreatedDate
 	@Column(updatable = false)
@@ -42,5 +43,9 @@ public class Member {
 
 	public Member() {
 
+	}
+
+	public void updateTid(String tid) {
+		this.tid = tid;
 	}
 }
