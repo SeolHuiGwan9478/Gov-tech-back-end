@@ -1,6 +1,6 @@
 package hufs.likelion.gov.domain.complain.dto;
 
-import hufs.likelion.gov.domain.authentication.dto.GetMemberData;
+import hufs.likelion.gov.domain.authentication.dto.request.GetMemberData;
 import hufs.likelion.gov.domain.authentication.entity.Member;
 import hufs.likelion.gov.domain.complain.entity.ComplainReply;
 import lombok.Builder;

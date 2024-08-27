@@ -9,17 +9,21 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.webjars.NotFoundException;
 
+import hufs.likelion.gov.domain.authentication.entity.Member;
 import hufs.likelion.gov.domain.authentication.entity.RefreshToken;
+import hufs.likelion.gov.domain.authentication.entity.Role;
+import hufs.likelion.gov.domain.authentication.dto.request.LoginRequest;
+import hufs.likelion.gov.domain.authentication.dto.request.SignUpRequest;
 import hufs.likelion.gov.domain.authentication.exception.MemberException;
+import hufs.likelion.gov.domain.authentication.kakao.interfaces.OAuthInfoResponse;
+import hufs.likelion.gov.domain.authentication.kakao.interfaces.OAuthLoginParams;
 import hufs.likelion.gov.domain.authentication.jwt.JwtAuthenticationResponse;
 import hufs.likelion.gov.domain.authentication.jwt.JwtTokenProvider;
+import hufs.likelion.gov.domain.authentication.kakao.AuthTokens;
+import hufs.likelion.gov.domain.authentication.kakao.AuthTokensGenerator;
+import hufs.likelion.gov.domain.authentication.kakao.OAuthProvider;
 import hufs.likelion.gov.domain.authentication.repository.MemberRepository;
-import hufs.likelion.gov.domain.authentication.entity.Member;
-import hufs.likelion.gov.domain.authentication.entity.Role;
-import hufs.likelion.gov.domain.authentication.entity.request.LoginRequest;
-import hufs.likelion.gov.domain.authentication.entity.request.SignUpRequest;
 import hufs.likelion.gov.domain.authentication.repository.RefreshTokenRepository;
 import lombok.AllArgsConstructor;
 
@@ -32,6 +36,8 @@ public class AuthService {
 	private JwtTokenProvider tokenProvider;
 	private MemberRepository memberRepository;
 	private RefreshTokenRepository refreshTokenRepository;
+	private RequestOAuthInfoService requestOAuthInfoService;
+	private AuthTokensGenerator authTokensGenerator;
 
 	@Transactional
 	public JwtAuthenticationResponse authenticateUser(LoginRequest loginRequest) {
@@ -82,7 +88,8 @@ public class AuthService {
 			passwordEncoder.encode(signUpRequest.getPassword()),
 			signUpRequest.getEmail(),
 			signUpRequest.getProfilePhoto(),
-			signUpRequest.getRole()
+			signUpRequest.getRole(),
+			OAuthProvider.GENERAL
 		);
 
 		memberRepository.save(member);
@@ -104,5 +111,44 @@ public class AuthService {
 		} else {
 			throw new MemberException("Invalid refresh token");
 		}
+	}
+
+	@Transactional
+	public AuthTokens login(OAuthLoginParams params) {
+		OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
+		Long userId = findOrCreateMember(oAuthInfoResponse);
+
+		AuthTokens authTokens = authTokensGenerator.generate(userId);
+		Optional<Member> member = memberRepository.findById(userId);
+
+		Optional<RefreshToken> byUserId = refreshTokenRepository.findByMember_MemberId(member.get().getMemberId());
+		if (byUserId.isPresent()) {
+			RefreshToken refreshTokenEntity = byUserId.get();
+			refreshTokenEntity.setToken(authTokens.getRefreshToken());
+			refreshTokenRepository.save(refreshTokenEntity);
+		} else {
+			RefreshToken refreshTokenEntity = new RefreshToken();
+			refreshTokenEntity.setToken(authTokens.getRefreshToken());
+			refreshTokenEntity.setMember(member.get());
+			refreshTokenEntity.setExpiryDate(tokenProvider.calculateRefreshTokenExpiryDate());
+			refreshTokenRepository.save(refreshTokenEntity);
+		}
+		return authTokens;
+	}
+
+	private Long findOrCreateMember(OAuthInfoResponse oAuthInfoResponse) {
+		return memberRepository.findByEmail(oAuthInfoResponse.getEmail())
+			.map(Member::getId)
+			.orElseGet(() -> newMember(oAuthInfoResponse));
+	}
+
+	private Long newMember(OAuthInfoResponse oAuthInfoResponse) {
+		Member member = Member.builder()
+			.email(oAuthInfoResponse.getEmail())
+			.role(Role.Protector)
+			.oAuthProvider(oAuthInfoResponse.getOAuthProvider())
+			.build();
+
+		return memberRepository.save(member).getId();
 	}
 }

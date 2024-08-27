@@ -6,8 +6,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtTokenProvider {
@@ -32,6 +35,31 @@ public class JwtTokenProvider {
 			.setExpiration(expiryDate)
 			.signWith(SignatureAlgorithm.HS512, jwtSecret)
 			.compact();
+	}
+
+	public String generate(String subject, Date expiredAt) {
+		return Jwts.builder()
+			.setSubject(subject)
+			.setExpiration(expiredAt)
+			.signWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret)), SignatureAlgorithm.HS512)
+			.compact();
+	}
+
+	public String extractSubject(String accessToken) {
+		Claims claims = parseClaims(accessToken);
+		return claims.getSubject();
+	}
+
+	private Claims parseClaims(String accessToken) {
+		try {
+			return Jwts.parserBuilder()
+				.setSigningKey(Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret)))
+				.build()
+				.parseClaimsJws(accessToken)
+				.getBody();
+		} catch (ExpiredJwtException e) {
+			return e.getClaims();
+		}
 	}
 
 	// Refresh Token 생성
