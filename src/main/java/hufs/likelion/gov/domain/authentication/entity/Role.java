@@ -3,11 +3,11 @@ package hufs.likelion.gov.domain.authentication.entity;
 import hufs.likelion.gov.domain.authentication.exception.MemberException;
 
 public enum Role {
-	NationalQualification, PartTime, Manager, Protector;
+	CARETAKER, MANAGER, PROTECTOR, SUPERADMIN;
 
 	public static void fromString(String roleStr) {
 		try {
-			Role.valueOf(roleStr);
+			Role.valueOf(roleStr.toUpperCase());
 		} catch (IllegalArgumentException e) {
 			throw new MemberException("Invalid role: " + roleStr);
 		}

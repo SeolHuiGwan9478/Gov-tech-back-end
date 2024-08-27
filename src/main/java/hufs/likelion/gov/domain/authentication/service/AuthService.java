@@ -10,19 +10,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import hufs.likelion.gov.domain.authentication.dto.request.ChangePasswordRequest;
+import hufs.likelion.gov.domain.authentication.dto.request.LoginRequest;
+import hufs.likelion.gov.domain.authentication.dto.request.SignUpManagerRequest;
+import hufs.likelion.gov.domain.authentication.dto.request.SignUpRequest;
 import hufs.likelion.gov.domain.authentication.entity.Member;
 import hufs.likelion.gov.domain.authentication.entity.RefreshToken;
 import hufs.likelion.gov.domain.authentication.entity.Role;
-import hufs.likelion.gov.domain.authentication.dto.request.LoginRequest;
-import hufs.likelion.gov.domain.authentication.dto.request.SignUpRequest;
 import hufs.likelion.gov.domain.authentication.exception.MemberException;
-import hufs.likelion.gov.domain.authentication.kakao.interfaces.OAuthInfoResponse;
-import hufs.likelion.gov.domain.authentication.kakao.interfaces.OAuthLoginParams;
+import hufs.likelion.gov.domain.authentication.jwt.CustomUserDetails;
 import hufs.likelion.gov.domain.authentication.jwt.JwtAuthenticationResponse;
 import hufs.likelion.gov.domain.authentication.jwt.JwtTokenProvider;
 import hufs.likelion.gov.domain.authentication.kakao.AuthTokens;
 import hufs.likelion.gov.domain.authentication.kakao.AuthTokensGenerator;
 import hufs.likelion.gov.domain.authentication.kakao.OAuthProvider;
+import hufs.likelion.gov.domain.authentication.kakao.interfaces.OAuthInfoResponse;
+import hufs.likelion.gov.domain.authentication.kakao.interfaces.OAuthLoginParams;
 import hufs.likelion.gov.domain.authentication.repository.MemberRepository;
 import hufs.likelion.gov.domain.authentication.repository.RefreshTokenRepository;
 import lombok.AllArgsConstructor;
@@ -83,12 +86,48 @@ public class AuthService {
 			throw new MemberException("Invalid role provided: " + signUpRequest.getRole());
 		}
 
+		if (signUpRequest.getRole() == Role.SUPERADMIN) {
+			throw new MemberException("SuperAdmin cannot be registered");
+		} else if (signUpRequest.getRole() == Role.MANAGER) {
+			throw new MemberException("Manager cannot be registered");
+		}
+
 		Member member = new Member(
 			signUpRequest.getUserId(),
 			passwordEncoder.encode(signUpRequest.getPassword()),
 			signUpRequest.getEmail(),
 			signUpRequest.getProfilePhoto(),
 			signUpRequest.getRole(),
+			OAuthProvider.GENERAL
+		);
+
+		memberRepository.save(member);
+
+		Optional<Member> byUserId = memberRepository.findByMemberId(signUpRequest.getUserId());
+		if (byUserId.isPresent()) {
+			return "User registered successfully";
+		} else {
+			throw new MemberException("User registration Failed");
+		}
+	}
+
+	@Transactional
+	public String register(SignUpManagerRequest signUpRequest, CustomUserDetails customUserDetails) {
+		if (memberRepository.findByMemberId(customUserDetails.getUsername())
+			.orElseThrow(() -> new MemberException("SuperAdmin not found"))
+			.getRole() != Role.SUPERADMIN) {
+			throw new MemberException("Only SuperAdmin can register Manager");
+		}
+
+		if (memberRepository.existsByMemberId(signUpRequest.getUserId())) {
+			throw new MemberException("MemberId is already taken!");
+		}
+
+		Member member = new Member(
+			signUpRequest.getUserId(),
+			passwordEncoder.encode(signUpRequest.getPassword()),
+			signUpRequest.getEmail(),
+			Role.MANAGER,
 			OAuthProvider.GENERAL
 		);
 
@@ -145,10 +184,23 @@ public class AuthService {
 	private Long newMember(OAuthInfoResponse oAuthInfoResponse) {
 		Member member = Member.builder()
 			.email(oAuthInfoResponse.getEmail())
-			.role(Role.Protector)
+			.role(Role.CARETAKER)
 			.oAuthProvider(oAuthInfoResponse.getOAuthProvider())
 			.build();
 
 		return memberRepository.save(member).getId();
+	}
+
+	public void changePassword(ChangePasswordRequest changePasswordRequest) {
+		Member member = memberRepository.findByMemberId(changePasswordRequest.getMemberId())
+			.orElseThrow(() -> new MemberException("Member not found"));
+
+		if (!passwordEncoder.matches(changePasswordRequest.getOldPassword(), member.getPassword())) {
+			throw new MemberException("Old password is incorrect");
+		}
+
+		member.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+		memberRepository.save(member);
+
 	}
 }

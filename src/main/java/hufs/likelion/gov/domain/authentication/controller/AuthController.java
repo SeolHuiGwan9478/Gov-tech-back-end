@@ -3,14 +3,18 @@ package hufs.likelion.gov.domain.authentication.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import hufs.likelion.gov.domain.authentication.dto.request.ChangePasswordRequest;
 import hufs.likelion.gov.domain.authentication.dto.request.LoginRequest;
+import hufs.likelion.gov.domain.authentication.dto.request.SignUpManagerRequest;
 import hufs.likelion.gov.domain.authentication.dto.request.SignUpRequest;
+import hufs.likelion.gov.domain.authentication.jwt.CustomUserDetails;
 import hufs.likelion.gov.domain.authentication.kakao.AuthTokens;
 import hufs.likelion.gov.domain.authentication.kakao.KakaoLoginParams;
 import hufs.likelion.gov.domain.authentication.service.AuthService;
@@ -35,6 +39,13 @@ public class AuthController {
 		return ResponseEntity.ok(registered);
 	}
 
+	@PostMapping("/signup/manager")
+	public ResponseEntity<?> signupManager(@Valid @RequestBody SignUpManagerRequest signUpRequest, @AuthenticationPrincipal
+	CustomUserDetails customUserDetails) {
+		String registered = authService.register(signUpRequest, customUserDetails);
+		return ResponseEntity.ok(registered);
+	}
+
 	@PostMapping("/refresh")
 	public ResponseEntity<?> refreshToken(@RequestBody String refreshTokenRequest) {
 		String refreshToken = authService.refreshToken(refreshTokenRequest);
@@ -45,5 +56,11 @@ public class AuthController {
 	public ResponseEntity<?> loginKakao(@RequestBody KakaoLoginParams params) {
 		AuthTokens login = authService.login(params);
 		return new ResponseEntity<>(login, HttpStatus.OK);
+	}
+
+	@PostMapping("/password")
+	public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
+		authService.changePassword(changePasswordRequest);
+		return ResponseEntity.ok("Password changed successfully");
 	}
 }
