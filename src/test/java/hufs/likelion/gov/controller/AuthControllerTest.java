@@ -20,8 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import hufs.likelion.gov.domain.authentication.controller.AuthController;
 import hufs.likelion.gov.domain.authentication.entity.Role;
-import hufs.likelion.gov.domain.authentication.entity.request.LoginRequest;
-import hufs.likelion.gov.domain.authentication.entity.request.SignUpRequest;
+import hufs.likelion.gov.domain.authentication.dto.request.LoginRequest;
+import hufs.likelion.gov.domain.authentication.dto.request.SignUpRequest;
 import hufs.likelion.gov.domain.authentication.jwt.JwtAuthenticationResponse;
 import hufs.likelion.gov.domain.authentication.jwt.JwtTokenProvider;
 import hufs.likelion.gov.domain.authentication.service.AuthService;
