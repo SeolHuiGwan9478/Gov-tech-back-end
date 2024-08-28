@@ -31,6 +31,7 @@ public class Member {
 	private Boolean isAuth = false;
 	private String profilePhoto;
 	private Role role;
+	private String tid;
 
 	@Enumerated(EnumType.STRING)
 	private OAuthProvider oAuthProvider;
@@ -60,5 +61,9 @@ public class Member {
 
 	public Member() {
 
+	}
+
+	public void updateTid(String tid) {
+		this.tid = tid;
 	}
 }
