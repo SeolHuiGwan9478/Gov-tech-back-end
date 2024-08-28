@@ -60,4 +60,16 @@ public class CarePostController {
         PatchCarePostResponse response = carePostService.finishCarePost(authentication, postId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    //요청 수락
+    @PatchMapping("/accept/{postId}/{requestId}") //patch
+    public ResponseEntity<?> acceptCareRequest(Authentication authentication, @PathVariable("postId") Long postId, @PathVariable Long requestId) {
+        CareRequestResponse response = carePostService.acceptCareRequest(authentication, postId, requestId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    //요청 거부
+    @PatchMapping("/reject/{postId}/{requestId}")
+    public ResponseEntity<?> rejectCareRequest(Authentication authentication, @PathVariable("postId") Long postId,  @PathVariable Long requestId) {
+        CareRequestResponse response = carePostService.rejectCareRequest(authentication, postId, requestId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

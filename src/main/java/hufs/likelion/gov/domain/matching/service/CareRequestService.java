@@ -44,35 +44,4 @@ public class CareRequestService {
             .map(CareRequestResponse::toCareRequestResponse)
             .toList();
     }
-
-
-    //요청 수락
-//    public CareRequestResponse acceptCareRequest(Authentication authentication, Long postId) {
-//        Member requester = memberRepository.findByMemberId(authentication.getName()).orElseThrow();
-//        CarePost carePost = carePostRepository.findById(postId).orElseThrow();
-//        CareRequest careRequest = careRequestRepository.findByRequesterAndCarePost(requester, carePost);
-//
-//        if(careRequest.getStatus() == MatchStatus.REQUESTED){
-//            careRequest.setStatus(MatchStatus.ACCEPTED);
-//            careRequest.setCreatedAt(LocalDateTime.now());
-//            return toCareRequestResponse(careRequest);
-//        } else {
-//            throw new AccessDeniedException("이미 수락된 요청입니다.");
-//        }
-//    }
-
-    //요청 거부
-//    public CareRequestResponse rejectCareRequest(Authentication authentication, Long postId) {
-//        Member requester = memberRepository.findByMemberId(authentication.getName()).orElseThrow();
-//        CarePost carePost = carePostRepository.findById(postId).orElseThrow();
-//        CareRequest careRequest = careRequestRepository.findByRequesterAndCarePost(requester, carePost);
-//
-//        if(careRequest.getStatus() == MatchStatus.REQUESTED){
-//            careRequest.setStatus(MatchStatus.REJECTED);
-//            careRequest.setCreatedAt(LocalDateTime.now());
-//            return toCareRequestResponse(careRequest);
-//        } else {
-//            throw new AccessDeniedException("이미 수락된 요청입니다.");
-//        }
-//    }
 }
