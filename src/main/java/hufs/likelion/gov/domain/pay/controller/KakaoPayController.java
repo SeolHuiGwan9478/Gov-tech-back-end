@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/payment")
+@RequestMapping("/api/v1/payment")
 public class KakaoPayController {
 
     private final KakaoPayService kakaoPayService;
@@ -57,8 +57,8 @@ public class KakaoPayController {
      */
     @GetMapping("/cancel")
     public ResponseEntity<?> cancel() {
-        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("사용자가 결제를 취소하였습니다.");
-//            .body(new BaseResponse<>(HttpStatus.EXPECTATION_FAILED.value(),"사용자가 결제를 취소하였습니다."));
+        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
+            .body(new BaseResponse<>(HttpStatus.EXPECTATION_FAILED.value(),"사용자가 결제를 취소하였습니다."));
     }
 
     /**
@@ -67,9 +67,8 @@ public class KakaoPayController {
     @GetMapping("/fail")
     public ResponseEntity<?> fail() {
 
-        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("결제가 실패하였습니다.");
-//            .body(new BaseResponse<>(HttpStatus.EXPECTATION_FAILED.value(),"결제가 실패하였습니다."));
-
+        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
+            .body(new BaseResponse<>(HttpStatus.EXPECTATION_FAILED.value(),"결제가 실패하였습니다."));
     }
 
 }
