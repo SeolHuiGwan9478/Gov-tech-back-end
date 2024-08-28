@@ -157,6 +157,7 @@ public class CarePostService {
         if(careRequest.getStatus() == MatchStatus.REQUESTED){
             careRequest.setStatus(MatchStatus.ACCEPTED);
             careRequest.setCreatedAt(LocalDateTime.now());
+            carePost.setStatus(CarePostStatus.MATCHED);
             return toCareRequestResponse(careRequest);
         } else {
             throw new AccessDeniedException("이미 수락된 요청입니다.");
