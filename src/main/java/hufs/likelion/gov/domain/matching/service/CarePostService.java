@@ -7,19 +7,25 @@ import hufs.likelion.gov.domain.matching.entity.CareBaby;
 
 import hufs.likelion.gov.domain.matching.entity.CarePost;
 import hufs.likelion.gov.domain.matching.entity.CarePostStatus;
+import hufs.likelion.gov.domain.matching.entity.CareRequest;
+import hufs.likelion.gov.domain.matching.entity.MatchStatus;
 import hufs.likelion.gov.domain.matching.repository.CareBabyRepository;
 import hufs.likelion.gov.domain.matching.repository.CarePostRepository;
 
+import hufs.likelion.gov.domain.matching.repository.CareRequestRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static hufs.likelion.gov.domain.matching.dto.CareRequestResponse.toCareRequestResponse;
 import static hufs.likelion.gov.global.constant.GlobalConstant.*;
 
 @Service
@@ -29,7 +35,7 @@ public class CarePostService {
     private final CarePostRepository carePostRepository;
     private final CareBabyRepository careBabyRepository;
     private final MemberRepository memberRepository;
-
+    private final CareRequestRepository careRequestRepository;
     public GetCarePostsResponse findCarePosts(Pageable pageable){
         // write authentication code
         Page<CarePost> carePostsPage = carePostRepository.findAll(pageable);
@@ -132,5 +138,50 @@ public class CarePostService {
         return PatchCarePostResponse.builder()
                 .id(findCarePost.getId())
                 .build();
+    }
+
+    @Transactional
+    public CareRequestResponse acceptCareRequest(Authentication authentication, Long postId, Long requestId) {
+
+        Member requester = memberRepository.findById(requestId).orElseThrow();
+        CarePost carePost = carePostRepository.findById(postId).orElseThrow();
+        Member authMember = memberRepository.findByMemberId(authentication.getName()).orElseThrow();
+
+        if(authMember != carePost.getMember()){
+            throw new AccessDeniedException("요청 수락 권한이 없습니다.");
+        }
+
+        CareRequest careRequest = careRequestRepository.findByRequesterAndCarePost(requester, carePost);
+
+
+        if(careRequest.getStatus() == MatchStatus.REQUESTED){
+            careRequest.setStatus(MatchStatus.ACCEPTED);
+            careRequest.setCreatedAt(LocalDateTime.now());
+            carePost.setStatus(CarePostStatus.MATCHED);
+            return toCareRequestResponse(careRequest);
+        } else {
+            throw new AccessDeniedException("이미 수락된 요청입니다.");
+        }
+    }
+
+    @Transactional
+    public CareRequestResponse rejectCareRequest(Authentication authentication, Long postId, Long requestId) {
+        Member requester = memberRepository.findById(requestId).orElseThrow();
+        CarePost carePost = carePostRepository.findById(postId).orElseThrow();
+        Member authMember = memberRepository.findByMemberId(authentication.getName()).orElseThrow();
+
+        if(authMember != carePost.getMember()){
+            throw new AccessDeniedException("요청 거부 권한이 없습니다.");
+        }
+
+        CareRequest careRequest = careRequestRepository.findByRequesterAndCarePost(requester, carePost);
+
+        if(careRequest.getStatus() == MatchStatus.REQUESTED){
+            careRequest.setStatus(MatchStatus.REJECTED);
+            careRequest.setCreatedAt(LocalDateTime.now());
+            return toCareRequestResponse(careRequest);
+        } else {
+            throw new AccessDeniedException("이미 수락된 요청입니다.");
+        }
     }
 }

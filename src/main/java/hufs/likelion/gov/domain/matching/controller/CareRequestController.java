@@ -34,17 +34,4 @@ public class CareRequestController {
         List<CareRequestResponse> responses = careRequestService.findAllCareRequest(authentication);
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
-
-    //요청 수락
-//    @PatchMapping("/accept/{postId}") //patch
-//    public ResponseEntity<?> acceptCareRequest(Authentication authentication, @PathVariable("postId") Long postId) {
-//        CareRequestResponse response = careRequestService.acceptCareRequest(authentication, postId);
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
-    //요청 거부
-//    @PatchMapping("/reject/{postId}")
-//    public ResponseEntity<?> rejectCareRequest(Authentication authentication, @PathVariable("postId") Long postId) {
-//        CareRequestResponse response = careRequestService.rejectCareRequest(authentication, postId);
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
 }

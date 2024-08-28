@@ -55,8 +55,7 @@ public class SecurityConfig {
 							"/api/v1/complains/**"
 					).authenticated()
 					.requestMatchers(HttpMethod.PATCH,
-							"/api/v1/care/posts/**",
-              "/api/v1/care/requests/**"
+							"/api/v1/care/posts/**"
 					).authenticated()
 					.requestMatchers(HttpMethod.DELETE,
 							"/api/v1/care/posts/**"
