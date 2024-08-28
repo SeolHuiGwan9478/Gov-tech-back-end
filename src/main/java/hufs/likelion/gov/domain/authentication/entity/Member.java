@@ -49,6 +49,15 @@ public class Member {
 		this.oAuthProvider = oAuthProvider;
 	}
 
+	@Builder
+	public Member(String memberId, String password, String email, Role role, OAuthProvider oAuthProvider) {
+		this.memberId = memberId;
+		this.password = password;
+		this.email = email;
+		this.role = role;
+		this.oAuthProvider = oAuthProvider;
+	}
+
 	public Member() {
 
 	}
