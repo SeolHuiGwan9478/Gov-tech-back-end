@@ -1,5 +1,7 @@
 package hufs.likelion.gov.domain.authentication.service;
 
+import static hufs.likelion.gov.global.constant.GlobalConstant.*;
+
 import java.util.Optional;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -70,14 +72,14 @@ public class AuthService {
 
 			return new JwtAuthenticationResponse(accessToken, refreshTokenStr);
 		} else {
-			throw new MemberException("Member Not Found");
+			throw new MemberException(NOT_FOUND_MEMBER_ERR_MSG);
 		}
 	}
 
 	@Transactional
 	public String register(SignUpRequest signUpRequest) {
 		if (memberRepository.existsByMemberId(signUpRequest.getUserId())) {
-			throw new MemberException("MemberId is already taken!");
+			throw new MemberException(ALREADY_EXIST_MEMBER_ID_ERR_MSG);
 		}
 
 		try {
@@ -87,9 +89,9 @@ public class AuthService {
 		}
 
 		if (signUpRequest.getRole() == Role.SUPERADMIN) {
-			throw new MemberException("SuperAdmin cannot be registered");
+			throw new MemberException(REGISTER_SUPER_ADMIN_ERR_MSG);
 		} else if (signUpRequest.getRole() == Role.MANAGER) {
-			throw new MemberException("Manager cannot be registered");
+			throw new MemberException(REGISTER_MANAGER_ERR_MSG);
 		}
 
 		Member member = new Member(
@@ -107,20 +109,20 @@ public class AuthService {
 		if (byUserId.isPresent()) {
 			return "User registered successfully";
 		} else {
-			throw new MemberException("User registration Failed");
+			throw new MemberException(REGISTER_USER_ERR_MSG);
 		}
 	}
 
 	@Transactional
 	public String register(SignUpManagerRequest signUpRequest, CustomUserDetails customUserDetails) {
 		if (memberRepository.findByMemberId(customUserDetails.getUsername())
-			.orElseThrow(() -> new MemberException("SuperAdmin not found"))
+			.orElseThrow(() -> new MemberException(NOT_FOUND_SUPER_ADMIN_ERR_MSG))
 			.getRole() != Role.SUPERADMIN) {
-			throw new MemberException("Only SuperAdmin can register Manager");
+			throw new MemberException(REGISTER_AUTH_ERR_MSG);
 		}
 
 		if (memberRepository.existsByMemberId(signUpRequest.getUserId())) {
-			throw new MemberException("MemberId is already taken!");
+			throw new MemberException(ALREADY_EXIST_MEMBER_ID_ERR_MSG);
 		}
 
 		Member member = new Member(
@@ -137,7 +139,7 @@ public class AuthService {
 		if (byUserId.isPresent()) {
 			return "User registered successfully";
 		} else {
-			throw new MemberException("User registration Failed");
+			throw new MemberException(REGISTER_USER_ERR_MSG);
 		}
 	}
 
@@ -148,7 +150,7 @@ public class AuthService {
 			String userId = tokenProvider.getUserIdFromJWT(refreshTokenRequest);
 			return tokenProvider.generateAccessToken(userId);
 		} else {
-			throw new MemberException("Invalid refresh token");
+			throw new MemberException(INVALID_REFRESH_TOKEN_ERR_MSG);
 		}
 	}
 
@@ -193,7 +195,7 @@ public class AuthService {
 
 	public void changePassword(ChangePasswordRequest changePasswordRequest) {
 		Member member = memberRepository.findByMemberId(changePasswordRequest.getMemberId())
-			.orElseThrow(() -> new MemberException("Member not found"));
+			.orElseThrow(() -> new MemberException(NOT_FOUND_MEMBER_ERR_MSG));
 
 		if (!passwordEncoder.matches(changePasswordRequest.getOldPassword(), member.getPassword())) {
 			throw new MemberException("Old password is incorrect");
